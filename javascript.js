@@ -14,31 +14,31 @@ function bindJavaScript() {
 // schedule binding
 bindJavaScript();
 
-var coordX = 0;
 var coordY = 0;
   
-window.onmousemove = coordHandler;
-window.ontouchstart = coordHandler;
-window.ontouchmove = coordHandler;
-window.ontouchend = coordHandler;
-  
-function coordHandler(event) {
-  event.preventDefault();
-  var firstTouch;
+window.onmousemove = mouseHandler;
+window.ontouchstart = touchHandler;
+window.ontouchmove = touchHandler;
+window.ontouchend = touchHandler;
+
+function mouseHandler(event) {
   switch (event.type) {
       case 'mousemove':
-        coordX = event.clientX;
         coordY = event.clientY;
         break;
+  }
+  console.log(event.type);
+}
+
+function touchHandler(event) {
+  event.preventDefault();
+  var firstTouch = event.touches[0];
+  switch (event.type) {
       case 'touchstart':
-        pjs.touchStart();
-        firstTouch = event.touches[0];
-        coordX = firstTouch.clientX;
         coordY = firstTouch.clientY;
+        pjs.touchStart();
         break;
       case 'touchmove':
-        firstTouch = event.touches[0];
-        coordX = firstTouch.clientX;
         coordY = firstTouch.clientY;
         pjs.touchMove();
         break;

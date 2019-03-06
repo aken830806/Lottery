@@ -3,7 +3,7 @@ class Paper{
   float y;
   float yOffset;
   float speed = 0;
-  float width = 300;
+  float width = 900;
   float height = paper_height;
   String title;
   int index = papers.size();
@@ -13,63 +13,69 @@ class Paper{
   int b = (int)random(256);
   
   Paper(String title,float y){
-    font = createFont("Arial",1);
-    //font = createFont("標楷體",1);//chinese
+    //font = createFont("Arial",1);
+    font = createFont("標楷體",1);//chinese
     this.title = title;
     this.y = y;
   }
   void display(){
     bound();
     
-    fill(255);
+    if(y > -200 && y < 700){
+      fill(235, 240, 242);
+    }else{
+      fill(255);
+    }
+    stroke(0);
+    strokeWeight(1);
     rect(0,y,width-1,height);
     
     fill(0);
     textAlign(CENTER);// Set the alignment
-    textFont(font,24);
+    textFont(font,72);
     text(title,width/2,y+height/2);
     
     if(speed != 0){
       y += speed;
       if(speed > 0){
-        speed -= 0.1;
-      }else{
-        speed += 0.1;
+        speed -= 0.3;
       }
-      if(abs(speed) < 0.1)
+      if(abs(speed) < 0.3)
         speed = 0;
     }
   }
   void touch(){
     if(speed == 0){
-      yOffset = mouseY - y;
-      //yOffset = coordY - y;
-      touchY = mouseY;
+      yOffset = coordY - y;
+      touchY = coordY;
     }
   }
   void move(){
-    if(speed == 0 && mouseY > touchY){//only move down
+    if(speed == 0 && coordY > touchY){//only move down
       if(index == 0){
-        y = mouseY - yOffset;
-        //y = coordY - yOffset;
+        y = coordY - yOffset;
       }else{
-        if(papers.get(index-1).y < 500 + papers_length){
+        if(papers.get(index-1).y < 1500 + papers_length){
           y = papers.get(index-1).y + height;
         }else{
-          y = mouseY - yOffset;
+          y = coordY - yOffset;
         }
       }
     }
   }
   void afterMove(){
     if(speed == 0){
-      if(mouseY - touchY > 50){
-        speed = 25;
+      if(coordY - touchY > 50){
+        if(index != 0){
+          speed = papers.get(0).speed;
+        }else{
+          speed = 50 + random(50);
+        }
       }
     }
   }
   void bound(){
-    if(y > 500 + papers_length){//out of bound
+    if(y > 1500 + papers_length){//out of bound
       if(index == papers.size()-1){
         y = papers.get(0).y - height;
       }else{
